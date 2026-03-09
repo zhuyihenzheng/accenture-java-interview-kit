@@ -26,6 +26,13 @@ python3 -m http.server 8000
 3. 在 GitHub 仓库的 `Settings -> Pages` 中确认 `Build and deployment` 使用 `GitHub Actions`。
 4. 推送后，`.github/workflows/deploy-pages.yml` 会自动部署站点。
 
+或者直接使用：
+
+```bash
+gh auth login
+./publish-public.sh your-repo-name
+```
+
 ## 参考岗位
 
 - Accenture `ソフトウェアエンジニア（Java） - テクノロジー コンサルティング本部`
