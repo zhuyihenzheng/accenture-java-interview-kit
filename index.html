@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Accenture Java 面接質問集</title>
+    <meta
+      name="description"
+      content="Accenture の Java ポジションをもとに整理した日本語面接質問集。GitHub Pages とローカル静的表示に対応。"
+    >
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&family=Noto+Serif+JP:wght@500;700&display=swap"
+      rel="stylesheet"
+    >
+    <link rel="stylesheet" href="assets/styles.css">
+    <script defer src="assets/questions.js"></script>
+    <script defer src="assets/main.js"></script>
+  </head>
+  <body data-page="home">
+    <div class="ambient ambient-one"></div>
+    <div class="ambient ambient-two"></div>
+    <header class="site-header">
+      <a class="brand" href="index.html">
+        <span class="brand-mark">AC</span>
+        <span class="brand-copy">
+          <strong>面接質問集</strong>
+          <small>Accenture Java 面接準備</small>
+        </span>
+      </a>
+      <nav class="top-links">
+        <a target="_blank" rel="noreferrer" href="https://accenture.wd103.myworkdayjobs.com/AccentureCareers/job/Tokyo/-Java-----_R00206421?shared_id=YjBjYzZkNTctY2QwNS00ZmEwLTgxZTEtZjIzYWNiOWUwZmMy">募集要項</a>
+        <a href="detail.html?id=self-intro">最初の質問へ</a>
+      </nav>
+    </header>
+
+    <main class="page-shell">
+      <section class="hero" data-reveal>
+        <div class="hero-copy">
+          <p class="eyebrow">個別対策版</p>
+          <h1>Accenture Java 面接質問集</h1>
+          <p class="hero-text">
+            この質問集は、あなたの職務経歴と Accenture の
+            <code>R00206421</code> をもとに整理した
+            <code>純日本語版</code> の面接対策ページです。
+            <code>Java / Spring / SQL / AWS / 日本語での仕様調整 / TL 経験 / 大規模基幹系への適性</code>
+            を中心に準備できます。
+          </p>
+          <div class="cta-row">
+            <a class="button button-primary" href="detail.html?id=self-intro">必須質問から始める</a>
+            <a class="button button-secondary" href="#question-library">質問一覧を見る</a>
+          </div>
+        </div>
+        <div class="hero-panel">
+          <div class="panel-card">
+            <p class="panel-label">募集掲載日</p>
+            <p class="panel-value">2024-04-09</p>
+          </div>
+          <div class="panel-card">
+            <p class="panel-label">あなたのコア要素</p>
+            <p class="panel-value">対日開発 13 年 / 在日約 10 年 / N1 / TL</p>
+          </div>
+          <div class="panel-card">
+            <p class="panel-label">強いマッチ領域</p>
+            <p class="panel-value">Java / Spring / RDB / AWS / 仕様調整</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="summary-grid" id="overview-summary" data-reveal></section>
+
+      <section class="library-section" id="question-library" data-reveal>
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">想定質問</p>
+            <h2>質問一覧</h2>
+          </div>
+          <p class="section-text">
+            1 列レイアウトで、質問をクリックすると詳細ページに移動します。各詳細ページでは、答え方のポイント、回答例、使える実績素材、想定深掘り質問を確認できます。
+          </p>
+        </div>
+
+        <div class="toolbar">
+          <label class="search-box" for="search-input">
+            <span>検索</span>
+            <input id="search-input" type="search" placeholder="質問名、タグ、キーワードで検索">
+          </label>
+          <div id="filter-pills" class="filter-pills" aria-label="カテゴリ絞り込み"></div>
+        </div>
+
+        <div class="result-meta">
+          <span id="result-count"></span>
+          <span><code>P0</code> と <code>補強ポイント</code> を優先して準備するのがおすすめです。</span>
+        </div>
+
+        <div id="question-list" class="question-list" aria-live="polite"></div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>静的 HTML 版です。ローカルでも GitHub Pages でもそのまま利用できます。</p>
+    </footer>
+  </body>
+</html>
