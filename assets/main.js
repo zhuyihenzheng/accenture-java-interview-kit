@@ -28,12 +28,41 @@
     return `detail.html?id=${encodeURIComponent(id)}`;
   }
 
+  function answerStorageKey(id) {
+    return `interview-kit-answer:${id}`;
+  }
+
+  function getStoredAnswer(id, fallback) {
+    try {
+      return window.localStorage.getItem(answerStorageKey(id)) || fallback;
+    } catch (error) {
+      return fallback;
+    }
+  }
+
+  function setStoredAnswer(id, value) {
+    try {
+      window.localStorage.setItem(answerStorageKey(id), value);
+    } catch (error) {
+      // Ignore storage failures in private browsing or restricted environments.
+    }
+  }
+
+  function removeStoredAnswer(id) {
+    try {
+      window.localStorage.removeItem(answerStorageKey(id));
+    } catch (error) {
+      // Ignore storage failures in private browsing or restricted environments.
+    }
+  }
+
   function renderSummaryCards() {
     const container = document.getElementById("overview-summary");
     if (!container) {
       return;
     }
 
+    container.innerHTML = "";
     kit.site.summaryCards.forEach((card) => {
       const article = createElement("article", "summary-card");
       article.appendChild(createElement("h3", "", card.title));
@@ -163,12 +192,95 @@
 
   function renderAnswerBlock(question) {
     const block = createElement("section", "detail-block");
-    block.appendChild(createElement("h2", "", "回答例"));
+
+    const currentAnswer = { value: getStoredAnswer(question.id, question.answer) };
+    const head = createElement("div", "detail-block-head");
+    head.appendChild(createElement("h2", "", "回答例"));
+
+    const actions = createElement("div", "inline-actions");
+    const editButton = createElement("button", "link-button", "回答例を編集");
+    editButton.type = "button";
+    const saveButton = createElement("button", "link-button", "保存");
+    saveButton.type = "button";
+    saveButton.hidden = true;
+    const resetButton = createElement("button", "link-button", "デフォルトに戻す");
+    resetButton.type = "button";
+
+    actions.appendChild(editButton);
+    actions.appendChild(saveButton);
+    actions.appendChild(resetButton);
+    head.appendChild(actions);
+    block.appendChild(head);
+
+    const note = createElement(
+      "p",
+      "detail-note",
+      "この編集内容は現在のブラウザにだけ保存されます。GitHub Pages 上の元データは変わりません。"
+    );
+    block.appendChild(note);
+
     const answerWrap = createElement("div", "detail-answer");
-    splitParagraphs(question.answer).forEach((paragraph) => {
-      answerWrap.appendChild(createElement("p", "", paragraph));
+    const editor = createElement("textarea", "answer-editor");
+    editor.hidden = true;
+    editor.setAttribute("aria-label", "回答例の編集");
+
+    function renderAnswerView(text) {
+      answerWrap.innerHTML = "";
+      splitParagraphs(text).forEach((paragraph) => {
+        answerWrap.appendChild(createElement("p", "", paragraph));
+      });
+    }
+
+    function leaveEditMode() {
+      editor.hidden = true;
+      answerWrap.hidden = false;
+      saveButton.hidden = true;
+      editButton.textContent = "回答例を編集";
+    }
+
+    function enterEditMode() {
+      editor.hidden = false;
+      answerWrap.hidden = true;
+      saveButton.hidden = false;
+      editor.value = currentAnswer.value;
+      editButton.textContent = "編集を閉じる";
+      editor.focus();
+    }
+
+    renderAnswerView(currentAnswer.value);
+
+    editButton.addEventListener("click", () => {
+      if (editor.hidden) {
+        enterEditMode();
+      } else {
+        leaveEditMode();
+      }
     });
+
+    saveButton.addEventListener("click", () => {
+      const nextAnswer = editor.value.trim() || question.answer;
+      currentAnswer.value = nextAnswer;
+
+      if (nextAnswer === question.answer) {
+        removeStoredAnswer(question.id);
+      } else {
+        setStoredAnswer(question.id, nextAnswer);
+      }
+
+      renderAnswerView(currentAnswer.value);
+      leaveEditMode();
+    });
+
+    resetButton.addEventListener("click", () => {
+      currentAnswer.value = question.answer;
+      removeStoredAnswer(question.id);
+      renderAnswerView(currentAnswer.value);
+      editor.value = question.answer;
+      leaveEditMode();
+    });
+
     block.appendChild(answerWrap);
+    block.appendChild(editor);
     return block;
   }
 

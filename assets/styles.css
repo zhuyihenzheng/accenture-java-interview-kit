@@ -175,6 +175,10 @@ code {
   border-radius: var(--radius-lg);
 }
 
+.hero-single {
+  grid-template-columns: 1fr;
+}
+
 .hero-copy h1,
 .section-head h2,
 .detail-title {
@@ -246,6 +250,43 @@ code {
   gap: 0.85rem;
 }
 
+.insight-toggle {
+  margin-top: 1.2rem;
+  padding: 1.2rem 1.35rem 1.35rem;
+  border: 1px solid rgba(255, 255, 255, 0.66);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  backdrop-filter: blur(14px);
+  box-shadow: var(--shadow);
+}
+
+.insight-toggle summary {
+  cursor: pointer;
+  font-weight: 800;
+  color: var(--accent-strong);
+  list-style: none;
+}
+
+.insight-toggle summary::-webkit-details-marker {
+  display: none;
+}
+
+.insight-toggle summary::after {
+  content: "＋";
+  margin-left: 0.6rem;
+  color: var(--warm);
+}
+
+.insight-toggle[open] summary::after {
+  content: "−";
+}
+
+.insight-note {
+  margin: 0.9rem 0 0;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
 .panel-card,
 .summary-card,
 .question-card,
@@ -277,7 +318,7 @@ code {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1rem;
-  margin-top: 1.2rem;
+  margin-top: 1rem;
 }
 
 .summary-card {
@@ -521,6 +562,31 @@ code {
   font-size: 1.06rem;
 }
 
+.detail-block-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.9rem;
+  margin-bottom: 0.8rem;
+}
+
+.detail-block-head h2 {
+  margin: 0;
+}
+
+.detail-note {
+  margin: 0 0 0.9rem;
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.inline-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
 .detail-block ul {
   margin: 0;
   padding-left: 1.25rem;
@@ -541,6 +607,25 @@ code {
   margin: 0;
   color: var(--ink);
   line-height: 1.9;
+}
+
+.answer-editor {
+  width: 100%;
+  min-height: 18rem;
+  margin-top: 0.25rem;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.82);
+  color: var(--ink);
+  font: inherit;
+  line-height: 1.8;
+  resize: vertical;
+}
+
+.answer-editor:focus-visible {
+  outline: 2px solid rgba(12, 107, 103, 0.2);
+  border-color: rgba(12, 107, 103, 0.42);
 }
 
 .detail-nav {
