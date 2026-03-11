@@ -157,6 +157,10 @@ code {
   padding: 2rem 0 4rem;
 }
 
+body[data-page="detail"] .page-shell {
+  width: min(calc(100% - 2rem), 860px);
+}
+
 .hero,
 .library-section,
 .detail-card,
@@ -392,6 +396,16 @@ code {
   border-color: rgba(12, 107, 103, 0.42);
 }
 
+.filter-stack {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.filter-label {
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
 .filter-pills {
   display: flex;
   flex-wrap: wrap;
@@ -475,6 +489,11 @@ code {
   color: var(--accent-strong);
 }
 
+.badge-topic {
+  background: rgba(199, 105, 55, 0.14);
+  color: #8a4d1f;
+}
+
 .badge-tag {
   background: rgba(27, 36, 48, 0.06);
   color: var(--muted);
@@ -526,7 +545,7 @@ code {
 
 .detail-intro {
   margin: 1rem 0 0;
-  max-width: 52rem;
+  max-width: 44rem;
 }
 
 .detail-actions {

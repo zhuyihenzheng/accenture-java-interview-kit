@@ -80,11 +80,15 @@
             <input id="search-input" type="search" placeholder="質問名、タグ、キーワードで検索">
           </label>
           <div id="filter-pills" class="filter-pills" aria-label="カテゴリ絞り込み"></div>
+          <div id="topic-filter-panel" class="filter-stack">
+            <span class="filter-label">技術カテゴリ</span>
+            <div id="topic-pills" class="filter-pills" aria-label="技術カテゴリ絞り込み"></div>
+          </div>
         </div>
 
         <div class="result-meta">
           <span id="result-count"></span>
-          <span><code>P0</code> と <code>補強ポイント</code> を優先して準備するのがおすすめです。</span>
+          <span><code>必須質問</code> と <code>P0</code> を先に固め、技術系は <code>Spring</code> や <code>AWS</code> のタグで絞るのがおすすめです。</span>
         </div>
 
         <div id="question-list" class="question-list" aria-live="polite"></div>

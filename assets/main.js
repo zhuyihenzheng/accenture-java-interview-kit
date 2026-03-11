@@ -20,6 +20,23 @@
     return createElement("span", `badge ${className}`, text);
   }
 
+  function getQuestionTopics(question) {
+    return Array.isArray(question.topics) ? question.topics : [];
+  }
+
+  function getQuestionTagGroups(question) {
+    const topics = getQuestionTopics(question);
+    const topicSet = new Set(topics);
+    const focus = (question.focus || []).filter((tag) => !topicSet.has(tag));
+    return { topics, focus };
+  }
+
+  function appendQuestionTags(container, question) {
+    const { topics, focus } = getQuestionTagGroups(question);
+    topics.forEach((topic) => container.appendChild(createBadge(topic, "badge-topic")));
+    focus.forEach((tag) => container.appendChild(createBadge(tag, "badge-tag")));
+  }
+
   function splitParagraphs(text) {
     return text.split(/\n\s*\n/).map((item) => item.trim()).filter(Boolean);
   }
@@ -77,6 +94,8 @@
       return;
     }
 
+    filterRoot.innerHTML = "";
+
     const categories = ["すべて", ...new Set(kit.questions.map((item) => item.category))];
     categories.forEach((category) => {
       const button = createElement("button", "pill", category);
@@ -86,6 +105,51 @@
       }
       button.addEventListener("click", () => {
         state.category = category;
+        filterRoot.querySelectorAll(".pill").forEach((pill) => pill.classList.remove("is-active"));
+        button.classList.add("is-active");
+        renderQuestionList(state);
+      });
+      filterRoot.appendChild(button);
+    });
+  }
+
+  function getAvailableTopics() {
+    const discovered = [...new Set(kit.questions.flatMap((item) => getQuestionTopics(item)))];
+    if (!Array.isArray(kit.site.techTopics) || !kit.site.techTopics.length) {
+      return discovered;
+    }
+
+    const preferred = kit.site.techTopics.filter((topic) => discovered.includes(topic));
+    const preferredSet = new Set(preferred);
+    return [...preferred, ...discovered.filter((topic) => !preferredSet.has(topic))];
+  }
+
+  function renderTopicFilters(state) {
+    const panel = document.getElementById("topic-filter-panel");
+    const filterRoot = document.getElementById("topic-pills");
+
+    if (!panel || !filterRoot) {
+      return;
+    }
+
+    const topics = getAvailableTopics();
+    filterRoot.innerHTML = "";
+
+    if (!topics.length) {
+      panel.hidden = true;
+      return;
+    }
+
+    panel.hidden = false;
+
+    ["すべて", ...topics].forEach((topic) => {
+      const button = createElement("button", "pill", topic);
+      button.type = "button";
+      if (state.topic === topic) {
+        button.classList.add("is-active");
+      }
+      button.addEventListener("click", () => {
+        state.topic = topic;
         filterRoot.querySelectorAll(".pill").forEach((pill) => pill.classList.remove("is-active"));
         button.classList.add("is-active");
         renderQuestionList(state);
@@ -105,6 +169,7 @@
       question.category,
       question.priority,
       question.why,
+      ...(question.topics || []),
       ...(question.focus || [])
     ]
       .join(" ")
@@ -125,7 +190,8 @@
 
     const filtered = kit.questions.filter((question) => {
       const categoryMatched = state.category === "すべて" || question.category === state.category;
-      return categoryMatched && matchesSearch(question, state.keyword);
+      const topicMatched = state.topic === "すべて" || getQuestionTopics(question).includes(state.topic);
+      return categoryMatched && topicMatched && matchesSearch(question, state.keyword);
     });
 
     resultCount.textContent = `${filtered.length} / ${kit.questions.length} 問を表示中`;
@@ -149,7 +215,7 @@
       const summary = createElement("p", "", question.summary);
       const tags = createElement("div", "question-tags");
 
-      question.focus.forEach((tag) => tags.appendChild(createBadge(tag, "badge-tag")));
+      appendQuestionTags(tags, question);
 
       link.appendChild(topline);
       link.appendChild(title);
@@ -162,8 +228,9 @@
   function renderHomePage() {
     renderSummaryCards();
 
-    const state = { category: "すべて", keyword: "" };
+    const state = { category: "すべて", topic: "すべて", keyword: "" };
     renderFilters(state);
+    renderTopicFilters(state);
     renderQuestionList(state);
 
     const searchInput = document.getElementById("search-input");
@@ -353,7 +420,7 @@
     meta.appendChild(createBadge(question.category, "badge-category"));
 
     const tags = createElement("div", "detail-tags");
-    question.focus.forEach((tag) => tags.appendChild(createBadge(tag, "badge-tag")));
+    appendQuestionTags(tags, question);
 
     const title = createElement("h1", "detail-title", question.title);
     const intro = createElement("p", "detail-intro", question.why);
