@@ -20,6 +20,20 @@
     return createElement("span", `badge ${className}`, text);
   }
 
+  function normalizeQuestionText(text) {
+    return (text || "")
+      .toLowerCase()
+      .replace(/\s+/g, "")
+      .replace(/[「」『』（）()\[\]【】<>＜＞:：;；,.，。．、!！?？'"`´｀~〜ー-]/g, "")
+      .replace(/(を)?(詳しく)?教えてください$/g, "")
+      .replace(/(は)?(何ですか|どうですか|どう考えますか|どう進めますか|どうしますか|できますか|ありますか|思いますか|でしたか|ですか)$/g, "");
+  }
+
+  const questionIntentIndex = kit.questions.map((question) => ({
+    question,
+    normalizedTitle: normalizeQuestionText(question.title)
+  }));
+
   function getQuestionTopics(question) {
     return Array.isArray(question.topics) ? question.topics : [];
   }
@@ -246,12 +260,62 @@
     return kit.questions.find((item) => item.id === id);
   }
 
-  function renderListBlock(title, items) {
+  function findRelatedQuestionForFollowUp(currentQuestionId, itemText) {
+    const target = normalizeQuestionText(itemText);
+    if (!target) {
+      return null;
+    }
+
+    let bestMatch = null;
+    let bestScore = 0;
+
+    questionIntentIndex.forEach((entry) => {
+      const candidate = entry.question;
+      const source = entry.normalizedTitle;
+      if (!source || candidate.id === currentQuestionId) {
+        return;
+      }
+
+      let score = 0;
+      if (source === target) {
+        score = 1000;
+      } else if (source.includes(target) || target.includes(source)) {
+        score = Math.min(source.length, target.length);
+      }
+
+      if (score > bestScore) {
+        bestScore = score;
+        bestMatch = candidate;
+      }
+    });
+
+    return bestMatch;
+  }
+
+  function renderListBlock(title, items, options = {}) {
+    if (!Array.isArray(items) || !items.length) {
+      return null;
+    }
+
     const block = createElement("section", "detail-block");
     block.appendChild(createElement("h2", "", title));
     const list = createElement("ul");
     items.forEach((item) => {
-      list.appendChild(createElement("li", "", item));
+      const text = typeof item === "string" ? item : String(item ?? "");
+      const li = document.createElement("li");
+      li.appendChild(document.createTextNode(text));
+
+      if (options.linkToAnswers) {
+        const relatedQuestion = findRelatedQuestionForFollowUp(options.currentQuestionId, text);
+        if (relatedQuestion) {
+          li.appendChild(document.createTextNode(" "));
+          const answerLink = createElement("a", "detail-inline-link", "回答例へ");
+          answerLink.href = questionHref(relatedQuestion.id);
+          li.appendChild(answerLink);
+        }
+      }
+
+      list.appendChild(li);
     });
     block.appendChild(list);
     return block;
@@ -446,15 +510,39 @@
     actions.appendChild(share);
 
     const blocks = createElement("div", "detail-grid");
-    blocks.appendChild(renderListBlock("答え方のポイント", question.strategy));
     blocks.appendChild(renderAnswerBlock(question));
-    blocks.appendChild(renderListBlock("使える実績素材", question.evidence));
 
-    if (Array.isArray(question.avoid) && question.avoid.length) {
-      blocks.appendChild(renderListBlock("避けたい答え方", question.avoid));
+    const followUpBlock = renderListBlock("想定深掘り質問", question.followUps, {
+      linkToAnswers: true,
+      currentQuestionId: question.id
+    });
+    if (followUpBlock) {
+      blocks.appendChild(followUpBlock);
     }
 
-    blocks.appendChild(renderListBlock("想定深掘り質問", question.followUps));
+    const hiddenBlocks = [];
+    const strategyBlock = renderListBlock("答え方のポイント", question.strategy);
+    if (strategyBlock) {
+      hiddenBlocks.push(strategyBlock);
+    }
+
+    const evidenceBlock = renderListBlock("使える実績素材", question.evidence);
+    if (evidenceBlock) {
+      hiddenBlocks.push(evidenceBlock);
+    }
+
+    const avoidBlock = renderListBlock("避けたい答え方", question.avoid);
+    if (avoidBlock) {
+      hiddenBlocks.push(avoidBlock);
+    }
+
+    if (hiddenBlocks.length) {
+      const collapsible = createElement("details", "detail-collapsible");
+      const summary = createElement("summary", "detail-collapsible-summary", "補助情報を表示（初期非表示）");
+      collapsible.appendChild(summary);
+      hiddenBlocks.forEach((block) => collapsible.appendChild(block));
+      blocks.appendChild(collapsible);
+    }
 
     container.appendChild(breadcrumb);
     container.appendChild(meta);

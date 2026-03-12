@@ -6,6 +6,7 @@
 
 - `index.html`: 单列题目列表页
 - `detail.html`: 题目详情页
+- `phrases.html`: 在线面试高频日语短句页（精简版）
 - `assets/questions.js`: 题库数据
 - `assets/main.js`: 页面渲染逻辑
 - `assets/styles.css`: 响应式样式
