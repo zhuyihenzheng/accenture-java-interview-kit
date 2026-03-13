@@ -1,0 +1,4 @@
+interface:
+  display_name: "Interview Realtime Assistant"
+  short_description: "Real-time interview question detection and answering"
+  default_prompt: "Detect interview questions from live transcripts, classify question type, normalize terms, and generate concise, natural, speakable answers aligned to the user's real background."
