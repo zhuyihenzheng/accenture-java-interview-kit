@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Redis 面接 10 連問 | Accenture Java 面接質問集</title>
+    <meta
+      name="description"
+      content="Accenture / Java Software Engineer 面接で出やすい Redis の 10 連問を、回答テンプレートと工程判断付きで整理した詳細ページ。"
+    >
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&family=Noto+Serif+JP:wght@500;700&display=swap"
+      rel="stylesheet"
+    >
+    <link rel="stylesheet" href="assets/styles.css">
+  </head>
+  <body data-page="redis" id="top">
+    <div class="ambient ambient-one"></div>
+    <div class="ambient ambient-two"></div>
+
+    <header class="site-header">
+      <a class="brand" href="index.html">
+        <span class="brand-mark">AC</span>
+        <span class="brand-copy">
+          <strong>面接質問集</strong>
+          <small>Accenture Java 面接準備</small>
+        </span>
+      </a>
+      <nav class="top-links">
+        <a href="index.html">質問一覧</a>
+        <a href="detail.html?id=self-intro">最初の質問へ</a>
+        <a href="phrases.html">面接用語</a>
+      </nav>
+    </header>
+
+    <main class="page-shell redis-shell">
+      <section class="hero hero-single" data-reveal>
+        <div class="hero-copy">
+          <p class="eyebrow">Accenture 必問対策</p>
+          <h1>Redis 面接 10 連問</h1>
+          <p class="hero-text">
+            Web システム、高並行アクセス、AWS、性能最適化の文脈で出やすい Redis の質問を 10 問に整理しました。
+            回答は「用途」「リスク」「工程判断」が伝わる構成にしています。
+          </p>
+        </div>
+      </section>
+
+      <section class="library-section" data-reveal>
+        <div class="section-head">
+          <div>
+            <p class="eyebrow">タグで直達</p>
+            <h2>質問タグ</h2>
+          </div>
+          <p class="section-text">タグをクリックすると、該当する質問ブロックへ直接ジャンプします。</p>
+        </div>
+        <nav class="redis-tag-nav" aria-label="Redis 問題タグ">
+          <a class="pill" href="#redis-q1">1. Redis はなぜ速い</a>
+          <a class="pill" href="#redis-q2">2. Redis と RDB</a>
+          <a class="pill" href="#redis-q3">3. 向いているデータ</a>
+          <a class="pill" href="#redis-q4">4. TTL の決め方</a>
+          <a class="pill" href="#redis-q5">5. 無効化戦略</a>
+          <a class="pill" href="#redis-q6">6. 永続化方式</a>
+          <a class="pill" href="#redis-q7">7. セッション管理</a>
+          <a class="pill" href="#redis-q8">8. 注意点</a>
+          <a class="pill" href="#redis-q9">9. ロック設計</a>
+          <a class="pill" href="#redis-q10">10. 何でも Redis?</a>
+        </nav>
+      </section>
+
+      <section class="redis-list" data-reveal>
+        <article id="redis-q1" class="detail-block redis-block">
+          <h2>1. Redis はなぜ速いですか</h2>
+          <p class="detail-note">
+            Redis は主にメモリ上でデータを扱うため、ディスク I/O が中心の RDB より高速に読み書きできます。
+            さらにシンプルなデータ構造とイベントループ設計により、ロック競合が起きにくい点も効いています。
+          </p>
+          <p class="redis-point">
+            工程判断: 高頻度参照・低遅延要求の箇所に限定して使い、正本データは RDB に残す前提で設計します。
+          </p>
+          <a class="detail-inline-link redis-backtop" href="#top">タグ一覧へ戻る</a>
+        </article>
+
+        <article id="redis-q2" class="detail-block redis-block">
+          <h2>2. Redis と RDB はどう使い分けますか</h2>
+          <p class="detail-note">
+            RDB は業務データの正本、Redis は性能改善のための補助用途として分けるのが基本です。
+            例えば会員情報は RDB に保持し、参照頻度が高い項目のみ Redis にキャッシュします。
+          </p>
+          <p class="redis-point">
+            リスク管理: 責務を混ぜると整合性事故が起きやすいため、更新系は RDB 基準で統制します。
+          </p>
+          <a class="detail-inline-link redis-backtop" href="#top">タグ一覧へ戻る</a>
+        </article>
+
+        <article id="redis-q3" class="detail-block redis-block">
+          <h2>3. Redis に向いているデータは何ですか</h2>
+          <p class="detail-note">
+            高頻度参照で、多少の鮮度遅延を許容できるデータに向いています。
+            代表例はマスタデータ、セッション情報、レート制御カウンタ、一時状態管理です。
+          </p>
+          <p class="redis-point">
+            不向きな領域: 複雑検索や厳密トランザクションが必要な領域は RDB 側で処理します。
+          </p>
+          <a class="detail-inline-link redis-backtop" href="#top">タグ一覧へ戻る</a>
+        </article>
+
+        <article id="redis-q4" class="detail-block redis-block">
+          <h2>4. TTL はどう決めますか</h2>
+          <p class="detail-note">
+            TTL は「更新頻度」と「古いデータ許容度」の 2 軸で決めます。
+            整合性が重要なデータは短め、参照系で鮮度要求が低いものは長めに設定します。
+          </p>
+          <p class="redis-point">
+            実運用: TTL 単体ではなく、更新時の明示削除と組み合わせて鮮度ギャップを抑えます。
+          </p>
+          <a class="detail-inline-link redis-backtop" href="#top">タグ一覧へ戻る</a>
+        </article>
+
+        <article id="redis-q5" class="detail-block redis-block">
+          <h2>5. キャッシュ無効化はどうしますか</h2>
+          <p class="detail-note">
+            DB 更新後に該当キーを削除し、次回参照時に DB から再ロードする方式を採用します。
+            これにより更新直後の古いデータ残存時間を最小化できます。
+          </p>
+          <p class="redis-point">
+            加点ポイント: TTL だけに依存しない設計判断を示すと、実務理解が伝わりやすいです。
+          </p>
+          <a class="detail-inline-link redis-backtop" href="#top">タグ一覧へ戻る</a>
+        </article>
+
+        <article id="redis-q6" class="detail-block redis-block">
+          <h2>6. Redis は永続化できますか</h2>
+          <p class="detail-note">
+            可能です。RDB はスナップショット保存、AOF は更新操作ログの追記方式です。
+            要件に応じて復旧速度・データ損失許容を見ながら使い分けます。
+          </p>
+          <p class="redis-point">
+            工程判断: 永続化があっても、業務データ正本を Redis に寄せすぎない方が安全です。
+          </p>
+          <a class="detail-inline-link redis-backtop" href="#top">タグ一覧へ戻る</a>
+        </article>
+
+        <article id="redis-q7" class="detail-block redis-block">
+          <h2>7. Redis をセッション管理で使う理由は何ですか</h2>
+          <p class="detail-note">
+            セッションは高頻度参照のため Redis と相性が良く、複数サーバー間でも共有しやすいです。
+            TTL を設定すれば期限切れセッションを自動で整理できます。
+          </p>
+          <p class="redis-point">
+            実務観点: スケールアウト時のセッション一貫性と運用負荷の両面でメリットがあります。
+          </p>
+          <a class="detail-inline-link redis-backtop" href="#top">タグ一覧へ戻る</a>
+        </article>
+
+        <article id="redis-q8" class="detail-block redis-block">
+          <h2>8. Redis の注意点は何ですか</h2>
+          <p class="detail-note">
+            メモリ使用量の増加と、eviction 発生時の挙動管理が主な注意点です。
+            無制限に置くとコスト増と予期せぬデータ追い出しが起きるため、用途を限定します。
+          </p>
+          <p class="redis-point">
+            リスク管理: キー設計・容量上限・監視メトリクスを事前に決めておくことが重要です。
+          </p>
+          <a class="detail-inline-link redis-backtop" href="#top">タグ一覧へ戻る</a>
+        </article>
+
+        <article id="redis-q9" class="detail-block redis-block">
+          <h2>9. Redis でロックはできますか</h2>
+          <p class="detail-note">
+            可能です。例えば <code>SETNX</code> と有効期限を使って簡易ロックを実装できます。
+            ただし分散ロックではタイムアウト設計、解放漏れ、障害時の再取得競合に注意が必要です。
+          </p>
+          <p class="redis-point">
+            工程判断: 要件次第で DB 側の排他や別方式と比較し、過不足ない実装を選びます。
+          </p>
+          <a class="detail-inline-link redis-backtop" href="#top">タグ一覧へ戻る</a>
+        </article>
+
+        <article id="redis-q10" class="detail-block redis-block">
+          <h2>10. 何でも Redis に置けばよいですか</h2>
+          <p class="detail-note">
+            いいえ。Redis は強力ですが万能ではありません。
+            性能改善が必要な箇所へ限定し、DB・アプリ・Redis の責務を明確に分ける設計が安全です。
+          </p>
+          <p class="redis-point">
+            面接での締め方: 「性能要件と運用負荷を見て選ぶ」という判断軸を示すと高評価につながります。
+          </p>
+          <a class="detail-inline-link redis-backtop" href="#top">タグ一覧へ戻る</a>
+        </article>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>Redis は「定義」よりも「用途・リスク・工程判断」の説明力が評価されます。</p>
+    </footer>
+  </body>
+</html>
