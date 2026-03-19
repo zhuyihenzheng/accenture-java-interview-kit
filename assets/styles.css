@@ -791,6 +791,42 @@ body[data-page="detail"] .page-shell {
   line-height: 1.55;
 }
 
+body[data-page="detail"] .detail-breadcrumb {
+  font-size: 0.64rem;
+}
+
+body[data-page="detail"] .detail-title {
+  font-size: clamp(1.19rem, 2.1vw, 1.72rem);
+}
+
+body[data-page="detail"] .detail-intro,
+body[data-page="detail"] .detail-note,
+body[data-page="detail"] .detail-block ul,
+body[data-page="detail"] .detail-answer p,
+body[data-page="detail"] .answer-editor,
+body[data-page="detail"] .nav-card small,
+body[data-page="detail"] .nav-card strong,
+body[data-page="detail"] .detail-card .badge,
+body[data-page="detail"] .detail-nav .badge,
+body[data-page="detail"] .detail-actions .link-button {
+  font-size: 0.7rem;
+}
+
+body[data-page="detail"] .detail-block h2,
+body[data-page="detail"] .detail-collapsible-summary {
+  font-size: 0.74rem;
+}
+
+body[data-page="detail"] .detail-card .badge,
+body[data-page="detail"] .detail-nav .badge {
+  min-height: 1.33rem;
+  padding: 0 0.55rem;
+}
+
+body[data-page="detail"] .detail-actions .link-button {
+  min-height: 2.05rem;
+}
+
 .site-footer {
   padding: 0 0 2.4rem;
 }
