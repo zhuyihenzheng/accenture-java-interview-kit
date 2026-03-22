@@ -737,7 +737,7 @@ body[data-page="detail"] .page-shell {
 
 .detail-answer {
   display: grid;
-  gap: 0.9rem;
+  gap: 0.8rem;
 }
 
 .detail-answer p {
