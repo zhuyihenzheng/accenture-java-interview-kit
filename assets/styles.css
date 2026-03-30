@@ -159,7 +159,7 @@ code {
 }
 
 body[data-page="detail"] .page-shell {
-  width: clamp(500px, 20%, 980px);
+  width: clamp(375px, 20%, 980px);
   max-width: calc(100% - 2rem);
 }
 
